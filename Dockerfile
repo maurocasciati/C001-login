@@ -1,11 +1,11 @@
-FROM node:10.23.0 AS development
+FROM node:12.13-alpine AS development
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package*.json /app/
+COPY package*.json ./
 
-RUN npm install
+RUN npm install --only=development
 
-COPY . /app/
+COPY . .
 
 RUN npm run build
