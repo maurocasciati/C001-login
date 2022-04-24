@@ -14,3 +14,22 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data/
       - ./src/queries/db_setup.sql:/docker-entrypoint-initdb.d/db_setup.sql
+  dev:
+    container_name: nestjs-service
+    image: nestjs-service:1.0.0
+    build:
+        context: .
+        target: development
+        dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+        - 3000:3000
+    networks:
+        - nesjs-network
+    volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+    restart: unless-stopped
+
+networks:
+    nesjs-network:
