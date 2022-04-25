@@ -1,16 +1,23 @@
-import { Type } from "class-transformer";
-import { IsNotEmpty, ValidateNested } from "class-validator";
-import { UserAddressRequest } from "./UserAddressRequest.dto";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateUserRequest {
   @IsNotEmpty()
-  readonly id: number;
+  @IsString()
+  readonly username: string;
 
   @IsNotEmpty()
+  @IsString()
+  readonly password: string;
+
+  @IsNotEmpty()
+  @IsString()
   readonly name: string;
 
   @IsNotEmpty()
-  @ValidateNested()
-  @Type(() => UserAddressRequest)
-  readonly address: UserAddressRequest;
+  @IsString()
+  readonly address: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly cityId: number;
 }
