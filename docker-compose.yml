@@ -5,7 +5,7 @@ services:
     hostname: ${POSTGRES_HOST}
     image: postgres
     ports:
-      - "54321:5432"
+      - "54321:${POSTGRES_PORT}"
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -14,22 +14,32 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data/
       - ./src/queries/db_setup.sql:/docker-entrypoint-initdb.d/db_setup.sql
+    networks:
+      - nesjs-network
   dev:
     container_name: nestjs-service
     image: nestjs-service:1.0.0
     build:
-        context: .
-        target: development
-        dockerfile: ./Dockerfile
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     command: npm run start:dev
     ports:
-        - 3000:3000
+      - 3000:3000
     networks:
-        - nesjs-network
+      - nesjs-network
     volumes:
-        - .:/usr/src/app
-        - /usr/src/app/node_modules
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     restart: unless-stopped
+    depends_on:
+      - db
 
 networks:
     nesjs-network:

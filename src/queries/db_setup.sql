@@ -43,26 +43,26 @@ CREATE TABLE IF NOT EXISTS db.profile (
 );
 
 INSERT INTO db.country
-  (id, name)
+  (name)
 VALUES
-  (1, 'Argentina'),
-  (2, 'Uruguay'),
-  (3, 'Chile'),
-  (4, 'Bolivia'),
-  (5, 'Paraguay'),
-  (6, 'Brasil');
+  ('Argentina'),
+  ('Uruguay'),
+  ('Chile'),
+  ('Bolivia'),
+  ('Paraguay'),
+  ('Brasil');
 
 INSERT INTO db.city
-  (id, countryId, name)
+  (countryId, name)
 VALUES
-  (1, 1, 'Buenos Aires'),
-  (2, 1, 'Cordoba'),
-  (3, 1, 'Santa Fe'),
-  (4, 2, 'Montevideo'),
-  (5, 2, 'Colonia'),
-  (6, 3, 'Valparaiso'),
-  (7, 3, 'Santiago'),
-  (8, 4, 'La Paz'),
-  (9, 4, 'Cochabamba'),
-  (10, 5, 'Asuncion'),
-  (11, 6, 'Rio de Janeiro');
+  (1, 'Buenos Aires'),
+  (1, 'Cordoba'),
+  (1, 'Santa Fe'),
+  (2, 'Montevideo'),
+  (2, 'Colonia'),
+  (3, 'Valparaiso'),
+  (3, 'Santiago'),
+  (4, 'La Paz'),
+  (4, 'Cochabamba'),
+  (5, 'Asuncion'),
+  (6, 'Rio de Janeiro');
