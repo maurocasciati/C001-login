@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['envs/credentials.env'],
+      envFilePath: ['utils/credentials.env'],
     }),
     DatabaseModule,
     AuthModule,
