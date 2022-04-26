@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool, QueryResult } from 'pg';
 import { CreateUserRequest } from 'src/dtos/CreateUserRequest.dto';
+import { UserEntity } from 'src/dtos/UserEntity.dto';
 
 @Injectable()
 export class DatabaseService {
@@ -47,5 +48,15 @@ export class DatabaseService {
     await this.executeQuery(insertQuery, [request.username, request.password]);
 
     return await this.getLastCreatedId('user');
+  }
+
+  async getUser(username: string): Promise<UserEntity> {
+    const query = `
+      SELECT *
+      FROM db.user
+      WHERE username = $1
+    `;
+    const results = await this.executeQuery(query, [username]);
+    return results[0];
   }
 }
