@@ -4,7 +4,7 @@ import { validate } from 'class-validator';
 import { isEmpty } from '../utils/object.utils';
 
 @Injectable()
-export class UserValidator implements PipeTransform {
+export class BodyValidator implements PipeTransform {
   async transform(value: any, metadata: ArgumentMetadata) {
     if (isEmpty(value)) {
       throw new HttpException('Payload is empty', HttpStatus.BAD_REQUEST)

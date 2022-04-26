@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
+import { OwnBody } from 'src/decorators/ownBody.decorator';
 import { LoginRequestDto } from 'src/dtos/LoginRequest.dto';
+import { BodyValidator } from 'src/pipes/BodyValidator.pipe';
 
 import { AuthService } from './auth.service';
 
@@ -8,7 +10,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  login(@Body() loginRequestDto: LoginRequestDto) {
+  login(@OwnBody(new BodyValidator()) loginRequestDto: LoginRequestDto) {
     return this.authService.login(loginRequestDto);
   }
 }
