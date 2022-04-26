@@ -36,11 +36,9 @@ export class DatabaseService {
     return await this.getLastCreatedId('address');
   }
 
-  async createProfile(name: string, userId: number, addressId: number): Promise<number> {
+  async createProfile(name: string, userId: number, addressId: number) {
     const insertQuery = `INSERT INTO db.profile (userId, addressId, name) VALUES ($1, $2, $3);`;
     await this.executeQuery(insertQuery, [userId, addressId, name]);
-
-    return await this.getLastCreatedId('profile');
   }
 
   async createUser(request: CreateUserRequest) {
