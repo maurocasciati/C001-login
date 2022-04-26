@@ -18,6 +18,6 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getUserProfile(@AuthHeader('userId') userId: number) {
-    return userId;
+    return this.appService.getUserProfileById(userId);
   }
 }

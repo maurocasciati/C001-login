@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from './database/database.service';
 import { CreateUserRequest } from './dtos/CreateUserRequest.dto';
+import { ProfileDto } from './dtos/Profile.dto';
 
 @Injectable()
 export class AppService {
@@ -9,7 +10,6 @@ export class AppService {
   async createUser(request: CreateUserRequest) {
     try {
       const city = await this.dbconnection.getCityById(request.cityId);
-
       if (!city) {
         throw new HttpException(`City with id ${request.cityId} does not exist`, HttpStatus.NOT_FOUND);
       }
@@ -21,5 +21,9 @@ export class AppService {
       // TODO: Log error using a logger service (like nestjs built in pino logger)
       throw new HttpException('An error ocurred. Please contact support', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async getUserProfileById(userId: number): Promise<ProfileDto> {
+    return this.dbconnection.getUserProfileById(userId);
   }
 }
