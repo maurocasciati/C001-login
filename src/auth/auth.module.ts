@@ -14,8 +14,8 @@ import { DatabaseModule } from 'src/database/database.module';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async () => ({
-        secret: 'very!secured&secred(that-shouldt-be-here)',
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
       }),
       inject: [ConfigService],
     }),

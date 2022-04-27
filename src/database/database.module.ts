@@ -8,9 +8,7 @@ const databasePoolFactory = async (configService: ConfigService) => {
     user: configService.get('POSTGRES_USER'),
     host: configService.get('POSTGRES_HOST'),
     database: configService.get('POSTGRES_DB'),
-    // TODO: Fix Error('SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string') when doing: 
-    // password: configService.get('POSTGRES_PASSWORD'),
-    password: 'pgpwd',
+    password: configService.get('POSTGRES_PASSWORD'),
     port: configService.get('POSTGRES_PORT'),
   });
 };

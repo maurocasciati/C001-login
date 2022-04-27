@@ -10,7 +10,7 @@ import { RedisCacheModule } from './cache/cache.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['utils/credentials.env'],
+      envFilePath: ['src/utils/credentials.env'],
     }),
     DatabaseModule,
     AuthModule,

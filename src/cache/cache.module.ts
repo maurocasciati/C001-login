@@ -9,11 +9,10 @@ import * as redisStore from 'cache-manager-redis-store';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        // TODO: Fix config file
         store: redisStore,
-        host: 'redis',
-        port: '6379',
-        ttl: 60,
+        host: configService.get('REDIS_HOST'),
+        port: configService.get('REDIS_PORT'),
+        ttl: configService.get('REDIS_TTL'),
       })
     })
   ],
