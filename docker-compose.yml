@@ -26,7 +26,6 @@ services:
     image: nestjs-service:1.0.0
     build:
       context: .
-      target: development
       dockerfile: ./Dockerfile
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST}
