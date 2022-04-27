@@ -1,73 +1,68 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## Requirements
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- Use [NestJs](https://github.com/nestjs/nest) to create a restful-API using the db scheme and the endpoint description in the [AppIndex](https://github.com/maurocasciati/interview-challenge-101/blob/main/Requirements.md#appindex)
+- Try not to use the ORM for serialization and making the query
+- Use custom validation pipe /decorators 
+- Document how to fire up the project
+- Please use a git based version control and share the repo with us
+- Use redis or any other in-memory cache technique.  
+- Create docker containers for the user service with it's database. The system consists of three containers:
+  - A relational database service of your choice (ex: mysql, mssql, postgres, etc...)
+  - A node js service running the NestJs framework
+  - A redis instance
+- Extra for a full stack position:
+  - Create react app (looks are not important) using the endpoints you created in NestJs and ship it with the project (Login/Register/Profile)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Brief overview
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
+The core application is located directly in the main `AppModule`. It contains user and profile creation. Then you will find three more modules:
+- `AuthModule` which contains:
+  - The `AuthGuard` used to secure `GET /api/profile` endpoint
+  - The `AuthService`, `JWTService` and `JWTAuthStrategy` to process login and generate the JWT token
+  - The `AuthController` to expose `/auth` endpoint to log in
+- `DatabaseModule` to connect to [PostgreSQL](https://www.postgresql.org/). Since using an ORM was not encouraged, instead of having repositories for the different entities, I created a custom service by using [pg node-postgres client](https://node-postgres.com/) for all DB queries.
+- `RedisCacheModule` which uses [NestJS cache manager](https://www.npmjs.com/package/cache-manager) with [Redis](https://redis.io/) as a data store to save a cache for recently retrieved Profiles. 
+  - Note: I left a console log on propouse [at this line](https://github.com/maurocasciati/interview-challenge-101/blob/main/src/app.service.ts#L38) to easily see if the Profile requested is comming from the Database.
+  - Note: Cache time to live timer is set to 60 seconds.
 
 ## Running the app
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
+The only pre requisite is that you need to have [Docker](https://www.docker.com/get-started/) installed in your machine.
+After that, you can set up the applicacion by simply running the docker containers. You can use the environment configuration file provided in this repo:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ docker-compose --env-file src/utils/credentials.env up
 ```
 
-## Support
+## Using the app
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Create a user by doing a POST request to `/api/users` with the user data:
+```bash
+curl --location --request POST 'localhost:3000/api/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Profile Name",
+    "username": "username",
+    "password": "pa$$word",
+    "address": "Street 1234",
+    "cityId": 1
+}'
+```
 
-## Stay in touch
+2. Before getting you profile information again, you will also need to log in by doing a POST to `/auth`:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+curl --location --request POST 'localhost:3000/auth' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "username",
+    "password": "pa$$word"
+}'
+```
 
-## License
+3. All set! Now you can use the retrieved JWT token to GET you profile with `/api/profile`
+```bash
+curl --location --request GET 'http://localhost:3000/api/profile' \
+--header 'Authorization: Bearer {JWT Token}'
+```
 
-Nest is [MIT licensed](LICENSE).
