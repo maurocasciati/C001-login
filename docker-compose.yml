@@ -16,6 +16,11 @@ services:
       - ./src/utils/db_setup.sql:/docker-entrypoint-initdb.d/db_setup.sql
     networks:
       - nesjs-network
+  redis:
+    container_name: cache
+    image: redis
+    networks:
+      - nesjs-network
   dev:
     container_name: nestjs-service
     image: nestjs-service:1.0.0
@@ -40,6 +45,7 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+      - redis
 
 networks:
     nesjs-network:
