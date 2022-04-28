@@ -26,7 +26,7 @@ export class AuthService {
     const { username, password } = request;
 
     const user = await this.dbconnection.getUser(username);
-    if (user.password != password) {
+    if (!user || user.password != password) {
       throw new UnauthorizedException();
     }
 

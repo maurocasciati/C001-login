@@ -12,7 +12,7 @@ export class AppController {
 
   @Post('/users')
   postUser(@OwnBody(new BodyValidator()) createUserRequest: CreateUserRequest) {
-    this.appService.createUser(createUserRequest);
+    return this.appService.createUser(createUserRequest);
   }
 
   @UseGuards(JwtAuthGuard)
