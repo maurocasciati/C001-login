@@ -1,6 +1,6 @@
 export async function postLogin(user, pass) {
     try {
-      const authResponse = await fetch('https://0.0.0.0:4000/auth', {
+      const authResponse = await fetch('https://127.0.0.1:3000/auth', {
         method: 'POST',
         body: JSON.stringify({
             username: user,
@@ -15,7 +15,7 @@ export async function postLogin(user, pass) {
 
       const authBody = await authResponse.json();
 
-      const profileResponse = await fetch('https://0.0.0.0:4000/api/profile', { 
+      const profileResponse = await fetch('https://127.0.0.1:3000/api/profile', { 
         method: 'GET', 
         headers: new Headers({
           'Authorization': 'Bearer ' + authBody.access_token, 
@@ -34,7 +34,7 @@ export async function postLogin(user, pass) {
 
 export async function postUser(userBody) {
     try {
-      const response = await fetch('https://0.0.0.0:4000/api/users', {
+      const response = await fetch('https://127.0.0.1:3000/api/users', {
         method: 'POST',
         body: JSON.stringify({
             ...userBody

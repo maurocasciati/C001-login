@@ -14,7 +14,13 @@ function App() {
         <ModalProvider>
           { toggle ? <LoginPage/> : <SignupPage></SignupPage> }
         </ModalProvider>
-        <Button variant="primary" onClick={() => setToggle(!toggle)}>CHANGE</Button>
+        <Button 
+          style={{ width: '40%', position: 'absolute', left: '40%' }}
+          variant="primary"
+          onClick={() => setToggle(!toggle)}
+        >
+          { toggle ? 'Go to Signup page' : 'Go to Login page' }
+        </Button>
       </Card>
     </div>
   );
