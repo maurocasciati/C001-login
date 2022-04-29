@@ -68,6 +68,6 @@ curl --location --request GET 'http://localhost:5000/api/profile' \
 
 ## Using the app through it's API: _*new!*_
 
-1. Simply go to http://localhost:5000 and create an user.
+1. Simply go to http://localhost:3000 and create an user.
 2. Once you have an user created, go to Login page and retrieve your profile information. Is *that* easy!
 
