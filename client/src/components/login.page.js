@@ -8,16 +8,17 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [profileData, setProfileData] = useState();
 
+  let { handleModal } = React.useContext(ModalContext);
+
   useEffect(() => {
     if (profileData) {
       handleModal(profileData);
     }
   }, [profileData]);
-  
-  let { handleModal } = React.useContext(ModalContext);
 
   const submitHandler = (event) => {
     event.preventDefault();
+
     setUsername('');
     setPassword('');
     

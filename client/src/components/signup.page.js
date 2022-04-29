@@ -7,7 +7,7 @@ const SignupPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
-  const [cityId, setCityId] = useState();
+  const [cityId, setCityId] = useState(0);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -15,7 +15,7 @@ const SignupPage = () => {
     setUsername('');
     setPassword('');
     setAddress('');
-    setCityId('');
+    setCityId(0);
 
     postUser({
       name,
@@ -74,10 +74,19 @@ const SignupPage = () => {
         </Form.Group>
         <Form.Group className="mb-3" controlId="form.City">
           <Form.Label>City</Form.Label>
-          <Form.Select value={cityId} onChange={(event) => setCityId(event.target.value)}>
+          <Form.Select value={cityId} onChange={(event) => setCityId(Number(event.target.value))}>
             <option>Select you city</option>
-            <option value="1">Buenos Aires, Argentina</option>
-            <option value="2">Cordoba, Argentina</option>
+            <option value={1}>Buenos Aires, Argentina</option>
+            <option value={2}>Cordoba, Argentina</option>
+            <option value={3}>Santa Fe, Argentina</option>
+            <option value={4}>Montevideo, Uruguay</option>
+            <option value={5}>Colonia, Uruguay</option>
+            <option value={6}>Valparaiso, Chile</option>
+            <option value={7}>Santiago, Chile</option>
+            <option value={8}>La Paz, Bolivia</option>
+            <option value={9}>Cochabamba, Bolivia</option>
+            <option value={10}>Asunción, Paraguay</option>
+            <option value={11}>Rio de Janeiro, Brasil</option>
           </Form.Select>
         </Form.Group>
         <Button variant="primary" type="submit">Signup</Button>

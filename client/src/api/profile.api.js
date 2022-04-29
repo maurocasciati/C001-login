@@ -1,6 +1,6 @@
 export async function postLogin(user, pass) {
     try {
-      const authResponse = await fetch('https://127.0.0.1:3000/auth', {
+      const authResponse = await fetch('http://localhost:5000/auth', {
         method: 'POST',
         body: JSON.stringify({
             username: user,
@@ -9,80 +9,49 @@ export async function postLogin(user, pass) {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      if (!authResponse.ok) {
-        return _handleError(authResponse.status);
-      }
-
       const authBody = await authResponse.json();
 
-      const profileResponse = await fetch('https://127.0.0.1:3000/api/profile', { 
+      if (!authResponse.ok) {
+        throw Error('Error in authorization: ' + authBody.message);
+      }
+
+      const profileResponse = await fetch('http://localhost:5000/api/profile', { 
         method: 'GET', 
         headers: new Headers({
           'Authorization': 'Bearer ' + authBody.access_token, 
         }), 
       });
 
+      const profileBody = await profileResponse.json();
+
       if (!profileResponse.ok) {
-        return _handleError(authResponse.status);
+        throw Error('Error when fetching profile: ' + profileBody.message);
       }
 
-      return await profileResponse.json();
+      return profileBody;
     } catch (err) {
-      _throwSpecificError(err);
+        throw err;
     }
 }
 
 export async function postUser(userBody) {
     try {
-      const response = await fetch('https://127.0.0.1:3000/api/users', {
+      const response = await fetch('http://localhost:5000/api/users', {
         method: 'POST',
         body: JSON.stringify({
-            ...userBody
+          ...userBody
         }),
         headers: { 'Content-Type': 'application/json' }
       });
 
       if (!response.ok) {
-        return _handleError(response.status);
+        const responseBody = await response.json();
+        throw Error('Error when creating user: ' + responseBody.message);
       }
 
-      return await response.json();
+      return response.ok;
     } catch (err) {
-      _throwSpecificError(err);
+      throw err;
     }
 }
   
-function _handleError(status) {
-  if (status === 404) {
-    throw new NotFoundError();
-  }
-
-  if (status === 500) {
-    throw new ServerError();
-  }
-}
-
-function _throwSpecificError(err) {
-  if (err instanceof ServerError || err instanceof NotFoundError) {
-    throw err;
-  }
-  throw new NetworkError();
-}
-
-export class NetworkError extends Error {
-  constructor() {
-    super("Network error");
-  }
-}
-
-export class NotFoundError extends Error {
-  constructor() {
-    super("The resource you requested was not found.");
-  }
-}
-
-export class ServerError extends Error {
-  constructor() {
-    super("There was a server error.");
-  }
-}

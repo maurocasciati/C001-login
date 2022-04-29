@@ -10,14 +10,13 @@ const ProfileModal = () => {
     <>
       <Modal show={modal} onHide={handleModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{modalContent.name}'s Profile:</Modal.Title>
+          <Modal.Title>{modalContent?.name}'s Profile:</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ListGroup>
-            <ListGroup.Item>Username: {modalContent.username}</ListGroup.Item>
-            <ListGroup.Item>Password: {modalContent.password}</ListGroup.Item>
-            <ListGroup.Item>Address: {modalContent.address}</ListGroup.Item>
-            <ListGroup.Item>City number: {modalContent.cityId}</ListGroup.Item>
+            <ListGroup.Item>Address: {modalContent?.address?.street}</ListGroup.Item>
+            <ListGroup.Item>City: {modalContent?.address?.city}</ListGroup.Item>
+            <ListGroup.Item>Country: {modalContent?.address?.country}</ListGroup.Item>
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>

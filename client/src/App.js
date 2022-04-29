@@ -15,7 +15,7 @@ function App() {
           { toggle ? <LoginPage/> : <SignupPage></SignupPage> }
         </ModalProvider>
         <Button 
-          style={{ width: '40%', position: 'absolute', left: '40%' }}
+          style={{ width: '40%', display: 'block', margin: '0 auto' }}
           variant="primary"
           onClick={() => setToggle(!toggle)}
         >
