@@ -31,7 +31,7 @@ The only pre requisite is that you need to have [Docker](https://www.docker.com/
 After that, you can set up the applicacion by simply running the docker containers. You can use the environment configuration file provided in this repo:
 
 ```bash
-$ docker-compose --env-file src/utils/credentials.env up
+$ docker-compose --env-file service/src/utils/credentials.env up
 ```
 
 ## Using the app:
