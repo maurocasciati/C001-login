@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import { postUser } from '../api/profile.api';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -15,8 +16,22 @@ const SignupPage = () => {
     setPassword('');
     setAddress('');
     setCityId('');
-    return alert('Entered Values are: '+ name +', '+username+', '+password+', '+address+', '+cityId+', ')
+
+    postUser({
+      name,
+      username,
+      password,
+      address,
+      cityId,
+    }).then(showAlert).catch(handleError);
   };
+
+  const showAlert = () => {
+    return alert('User created!');
+  }
+  const handleError = (error) => {
+    return alert('An error ocurred: ' + error);
+  }
 
   return(
     <Container>

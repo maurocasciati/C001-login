@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import { postLogin } from '../api/profile.api';
 import { ModalContext } from '../context/modal.context';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [profileData, setProfileData] = useState();
+
+  useEffect(() => {
+    if (profileData) {
+      handleModal(profileData);
+    }
+  }, [profileData]);
   
   let { handleModal } = React.useContext(ModalContext);
 
@@ -12,8 +20,13 @@ const LoginPage = () => {
     event.preventDefault();
     setUsername('');
     setPassword('');
-    return alert('Entered Values are: '+ username +','+password)
+    
+    postLogin(username, password).then(setProfileData).catch(handleError);
   };
+
+  const handleError = (error) => {
+    return alert('An error ocurred: ' + error);
+  }
 
   return(
     <Container>
@@ -38,7 +51,6 @@ const LoginPage = () => {
         </Form.Group>
         <Button type='submit'>Login</Button>
       </Form>
-      <Button onClick={() => handleModal('Render this!')} />
     </Container>
   );
 }
