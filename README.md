@@ -1,4 +1,4 @@
-## Requirements
+## Requirements:
 
 - Use [NestJs](https://github.com/nestjs/nest) to create a restful-API using the db scheme and the endpoint description in the [AppIndex](https://github.com/maurocasciati/interview-challenge-101/blob/main/Requirements.md#appindex)
 - Try not to use the ORM for serialization and making the query
@@ -13,7 +13,7 @@
 - Extra for a full stack position:
   - Create react app (looks are not important) using the endpoints you created in NestJs and ship it with the project (Login/Register/Profile)
 
-## Brief overview
+## Brief overview:
 
 The core application is located directly in the main `AppModule`. It contains user and profile creation. Then you will find three more modules:
 - `AuthModule` which contains:
@@ -25,7 +25,7 @@ The core application is located directly in the main `AppModule`. It contains us
   - Note: I left a console log on propouse [at this line](https://github.com/maurocasciati/interview-challenge-101/blob/main/src/app.service.ts#L38) to easily see if the Profile requested is comming from the Database.
   - Note: Cache time to live timer is set to 60 seconds.
 
-## Running the app
+## Running the app:
 
 The only pre requisite is that you need to have [Docker](https://www.docker.com/get-started/) installed in your machine.
 After that, you can set up the applicacion by simply running the docker containers. You can use the environment configuration file provided in this repo:
@@ -34,11 +34,11 @@ After that, you can set up the applicacion by simply running the docker containe
 $ docker-compose --env-file src/utils/credentials.env up
 ```
 
-## Using the app
+## Using the app:
 
 1. Create a user by doing a POST request to `/api/users` with the user data:
 ```bash
-curl --location --request POST 'localhost:3000/api/users' \
+curl --location --request POST 'localhost:5000/api/users' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Profile Name",
@@ -52,7 +52,7 @@ curl --location --request POST 'localhost:3000/api/users' \
 2. Before getting you profile information again, you will also need to log in by doing a POST to `/auth`:
 
 ```bash
-curl --location --request POST 'localhost:3000/auth' \
+curl --location --request POST 'localhost:5000/auth' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "username": "username",
@@ -62,7 +62,12 @@ curl --location --request POST 'localhost:3000/auth' \
 
 3. All set! Now you can use the retrieved JWT token to GET you profile with `/api/profile`
 ```bash
-curl --location --request GET 'http://localhost:3000/api/profile' \
+curl --location --request GET 'http://localhost:5000/api/profile' \
 --header 'Authorization: Bearer {JWT Token}'
 ```
+
+## Using the app through it's API: _*new!*_
+
+1. Simply go to http://localhost:5000 and create an user.
+2. Once you have an user created, go to Login page and retrieve your profile information. Is *that* easy!
 
