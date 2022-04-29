@@ -46,8 +46,8 @@ services:
       - db
       - redis
   client:
-    container_name: nestjs-client
-    image: nestjs-client:1.0.0
+    container_name: react-client
+    image: react-client:1.0.0
     build:
       context: ./client
       dockerfile: ./Dockerfile
