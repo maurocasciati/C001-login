@@ -35,7 +35,7 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
     command: npm run start:dev
     ports:
-      - 3000:3000
+      - ${NEST_PORT}:${NEST_PORT}
     networks:
       - nesjs-network
     volumes:
@@ -45,6 +45,19 @@ services:
     depends_on:
       - db
       - redis
+  client:
+    container_name: nestjs-client
+    image: nestjs-client:1.0.0
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    environment:
+      - PORT=${REACT_PORT}
+    command: npm run start
+    ports:
+      - ${REACT_PORT}:${REACT_PORT}
+    links:
+      - service:srv
 
 networks:
     nesjs-network:
