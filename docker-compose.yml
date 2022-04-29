@@ -56,8 +56,6 @@ services:
     command: npm run start
     ports:
       - ${REACT_PORT}:${REACT_PORT}
-    links:
-      - service:srv
 
 networks:
     nesjs-network:
