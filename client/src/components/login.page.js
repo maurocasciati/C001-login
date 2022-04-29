@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import { ModalContext } from '../context/modal.context';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
+  let { handleModal } = React.useContext(ModalContext);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -35,6 +38,7 @@ const LoginPage = () => {
         </Form.Group>
         <Button type='submit'>Login</Button>
       </Form>
+      <Button onClick={() => handleModal('Render this!')} />
     </Container>
   );
 }
