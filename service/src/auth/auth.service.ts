@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import { LoginRequestDto } from 'src/dtos/LoginRequest.dto';
@@ -26,7 +27,9 @@ export class AuthService {
     const { username, password } = request;
 
     const user = await this.dbconnection.getUser(username);
-    if (!user || user.password != password) {
+    const isAuthorized = await bcrypt.compare(password, user.password);
+
+    if (!isAuthorized) {
       throw new UnauthorizedException();
     }
 

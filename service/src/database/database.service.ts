@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { use } from 'passport';
 import { Pool, QueryResult } from 'pg';
 import { CreateUserRequest } from 'src/dtos/CreateUserRequest.dto';
@@ -33,9 +34,11 @@ export class DatabaseService {
         'INSERT INTO db.address (cityId, street) VALUES ($1, $2) RETURNING id',
         [request.cityId, request.address]
       );
+
+      const hashedPassword = await this.getHashedPassword(request.password);
       const insertUserQueryResults = await this.executeQuery(
         'INSERT INTO db.user (username, password) VALUES ($1, $2) RETURNING id',
-        [request.username, request.password]
+        [request.username, hashedPassword]
       );
       
       await this.executeQuery(
@@ -70,5 +73,9 @@ export class DatabaseService {
     `;
     const results = await this.executeQuery(query, [userId]);
     return new ProfileDto(results[0] as ProfileEntity);
+  }
+
+  private async getHashedPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }
