@@ -1,6 +1,6 @@
 ## Requirements:
 
-- Use [NestJs](https://github.com/nestjs/nest) to create a restful-API using the db scheme and the endpoint description in the [AppIndex](https://github.com/maurocasciati/interview-challenge-101/blob/main/Requirements.md#appindex)
+- Use [NestJs](https://github.com/nestjs/nest) to create a restful-API using the db scheme and the endpoint description in the [AppIndex](https://github.com/maurocasciati/C001-login/blob/main/Requirements.md#appindex)
 - Try not to use the ORM for serialization and making the query
 - Use custom validation pipe /decorators 
 - Document how to fire up the project
@@ -22,7 +22,7 @@ The core application is located directly in the main `AppModule`. It contains us
   - The `AuthController` to expose `/auth` endpoint to log in
 - `DatabaseModule` to connect to [PostgreSQL](https://www.postgresql.org/). Since using an ORM was not encouraged, instead of having repositories for the different entities, I created a custom service by using [pg node-postgres client](https://node-postgres.com/) for all DB queries.
 - `RedisCacheModule` which uses [NestJS cache manager](https://www.npmjs.com/package/cache-manager) with [Redis](https://redis.io/) as a data store to save a cache for recently retrieved Profiles. 
-  - Note: I left a console log on propouse [at this line](https://github.com/maurocasciati/interview-challenge-101/blob/main/src/app.service.ts#L38) to easily see if the Profile requested is comming from the Database.
+  - Note: I left a console log on propouse [at this line](https://github.com/maurocasciati/C001-login/blob/main/src/app.service.ts#L38) to easily see if the Profile requested is comming from the Database.
   - Note: Cache time to live timer is set to 60 seconds.
 
 ## Running the app:
@@ -66,7 +66,7 @@ curl --location --request GET 'http://localhost:5000/api/profile' \
 --header 'Authorization: Bearer {JWT Token}'
 ```
 
-## Using the app through it's API: _*new!*_
+## Using the app through it's UI: _*new!*_
 
 1. Simply go to http://localhost:3000 and create an user.
 2. Once you have an user created, go to Login page and retrieve your profile information. Is *that* easy!
