@@ -12,19 +12,16 @@ export class AppService {
   ) {}
 
   async createUser(request: CreateUserRequest) {
-      const city = await this.dbconnection.getCityById(request.cityId);
-      if (!city) {
-        throw new HttpException(`City with id ${request.cityId} does not exist`, HttpStatus.NOT_FOUND);
-      }
+    const city = await this.dbconnection.getCityById(request.cityId);
+    if (!city) {
+      throw new HttpException(`City with id ${request.cityId} does not exist`, HttpStatus.NOT_FOUND);
+    }
 
-      await this.dbconnection.createUser(request).then(async userId => {
-        await this.dbconnection.createAddress(request.address, request.cityId).then(async addressId => {
-          await this.dbconnection.createProfile(request.name, userId, addressId).then().catch(error => {
-            console.log(error);
-            throw new HttpException('An error ocurred. Please contact support', HttpStatus.INTERNAL_SERVER_ERROR);
-          })
-        })
-      })
+    try {
+      await this.dbconnection.createUser(request);
+    } catch(error) {
+      throw new HttpException(`Error ocurred when creating the user: ${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async getUserProfileById(userId: number): Promise<ProfileDto> {

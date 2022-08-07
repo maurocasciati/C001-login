@@ -10,16 +10,9 @@ import { UserEntity } from 'src/dtos/UserEntity.dto';
 export class DatabaseService {
   constructor(@Inject('DATABASE_PROVIDER') private pool: Pool) {}
 
-  private executeQuery(queryText: string, values: any[] = []): Promise<any[]> {
-    return this.pool.query(queryText, values).then((result: QueryResult) => {
-      return result.rows;
-    });
-  }
-
-  private async getLastCreatedId(tableName: string): Promise<number> {
-    const query = `SELECT id FROM db.${tableName} ORDER BY id DESC LIMIT 1`;
-    const results = await this.executeQuery(query);
-    return results[0].id as Promise<number>;
+  private async executeQuery(queryText: string, values: any[] = []): Promise<any[]> {
+    const queryResult: QueryResult = await this.pool.query(queryText, values);
+    return queryResult.rows;
   }
 
   async getCityById(cityId: number): Promise<any> | null {
@@ -32,23 +25,28 @@ export class DatabaseService {
     return results[0] as Promise<any>;
   }
 
-  async createAddress(street: string, cityId: number): Promise<number> {
-    const insertQuery = `INSERT INTO db.address (cityId, street) VALUES ($1, $2);`;
-    await this.executeQuery(insertQuery, [cityId, street]);
-
-    return await this.getLastCreatedId('address');
-  }
-
-  async createProfile(name: string, userId: number, addressId: number) {
-    const insertQuery = `INSERT INTO db.profile (userId, addressId, name) VALUES ($1, $2, $3);`;
-    await this.executeQuery(insertQuery, [userId, addressId, name]);
-  }
-
   async createUser(request: CreateUserRequest) {
-    const insertQuery = `INSERT INTO db.user (username, password) VALUES ($1, $2);`;
-    await this.executeQuery(insertQuery, [request.username, request.password]);
+    try {
+      await this.executeQuery('BEGIN')
 
-    return await this.getLastCreatedId('user');
+      const insertAddressQueryResults = await this.executeQuery(
+        'INSERT INTO db.address (cityId, street) VALUES ($1, $2) RETURNING id',
+        [request.cityId, request.address]
+      );
+      const insertUserQueryResults = await this.executeQuery(
+        'INSERT INTO db.user (username, password) VALUES ($1, $2) RETURNING id',
+        [request.username, request.password]
+      );
+      
+      await this.executeQuery(
+        'INSERT INTO db.profile (userId, addressId, name) VALUES ($1, $2, $3)',
+        [insertUserQueryResults[0].id, insertAddressQueryResults[0].id, request.name]
+      );
+      await this.executeQuery('COMMIT');
+    } catch (error) {
+      await this.executeQuery('ROLLBACK');
+      throw error;
+    }
   }
 
   async getUser(username: string): Promise<UserEntity> {
